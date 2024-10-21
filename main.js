@@ -60,7 +60,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-// Запуск сервера
+
 server.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}/`);
 });

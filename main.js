@@ -14,10 +14,16 @@ program.parse(process.argv);
 const { host, port, cache } = program.opts();
 
 // Перевірка існування директорії кешу
-if (!fs.stat(cache).then(() => true).catch(() => false)) {
-  console.error(`Cache directory does not exist: ${cache}`);
-  process.exit(1);
+async function checkCacheDirectory() {
+  try {
+    await fs.stat(cache); // Перевіряємо, чи існує директорія
+  } catch (err) {
+    console.error(`Cache directory does not exist: ${cache}`);
+    process.exit(1);
+  }
 }
+
+checkCacheDirectory();
 
 const server = http.createServer(async (req, res) => {
   const urlPath = req.url.slice(1);  // Видаляємо слеш на початку
@@ -59,7 +65,6 @@ const server = http.createServer(async (req, res) => {
     }
   }
 });
-
 
 server.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}/`);
